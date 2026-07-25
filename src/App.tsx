@@ -7,7 +7,7 @@ import { compileField, type FormulaScope } from './lib/formula'
 import { generatePolylines } from './lib/trace'
 import { clipPolylines, type ClipShape } from './lib/clip'
 import { DEFAULT_PRESET, PRESETS, PRESET_NAMES } from './lib/presets'
-import { Scene } from './components/Scene'
+import { Scene, type Projection } from './components/Scene'
 import { RecordButton } from './components/RecordButton'
 import type { CameraMode } from './components/CameraRig'
 
@@ -75,6 +75,14 @@ export default function App() {
     mode: {
       value: 'orbit' as CameraMode,
       options: ['orbit', 'eased top-down', 'free (mouse)'] as CameraMode[],
+    },
+    projection: {
+      value: 'perspective' as Projection,
+      options: ['perspective', 'orthographic'] as Projection[],
+    },
+    orthoScale: {
+      value: 4.5, min: 1, max: 15, step: 0.1,
+      render: (get) => get('Camera.projection') === 'orthographic',
     },
     loopSeconds: { value: 8, min: 2, max: 30, step: 0.5 },
     orbitRadius: { value: 6, min: 2, max: 15, step: 0.1, render: isOrbit },
@@ -210,6 +218,8 @@ export default function App() {
           bounds={bounds}
           render={render}
           orbit={{ ...orbit, loopSeconds: cameraCtl.loopSeconds }}
+          projection={cameraCtl.projection}
+          orthoScale={cameraCtl.orthoScale}
         />
       </div>
 

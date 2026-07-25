@@ -27,7 +27,9 @@ npm run dev
 4. All polylines are merged into **one geometry / one draw call** — either
    shaded tubes (parallel-transport frames, casts soft shadows) or
    [meshline](https://github.com/pmndrs/meshline) ribbons (flat plotter look).
-5. Camera modes: **orbit** (constant elevation), **eased top-down** (starts
+5. Projection is switchable between **perspective** and **orthographic**
+   (`orthoScale` sets the visible world height; distant ground fades into
+   fog). Camera modes: **orbit** (constant elevation), **eased top-down** (starts
    looking straight down, sweeps down to `minElevation` and back over one
    loop while circling — `easePower` shapes the dwell, camera distance
    auto-tracks object size + `distanceOffset`), or **free (mouse)**
