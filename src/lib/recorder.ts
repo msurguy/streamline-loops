@@ -4,12 +4,25 @@ import {
   Mp4OutputFormat,
   Output,
   QUALITY_HIGH,
+  QUALITY_LOW,
+  QUALITY_MEDIUM,
+  QUALITY_VERY_HIGH,
   WebMOutputFormat,
   getFirstEncodableVideoCodec,
+  type Quality,
 } from 'mediabunny'
 import { Zip, ZipPassThrough } from 'fflate'
 import { bridge } from './sceneBridge'
 import { setCameraAngle, type OrbitParams } from '../components/CameraRig'
+
+export type RecordQuality = 'draft' | 'good' | 'high' | 'max'
+
+const QUALITY_MAP: Record<RecordQuality, Quality> = {
+  draft: QUALITY_LOW,
+  good: QUALITY_MEDIUM,
+  high: QUALITY_HIGH,
+  max: QUALITY_VERY_HIGH,
+}
 
 export interface RecordSettings {
   width: number
@@ -17,6 +30,7 @@ export interface RecordSettings {
   fps: number
   seconds: number
   format: 'video' | 'png'
+  quality: RecordQuality
 }
 
 export interface RecordCallbacks {
@@ -78,7 +92,7 @@ export async function recordLoop(
     if (settings.format === 'png') {
       await recordPngZip(totalFrames, fps, orbit, cb)
     } else {
-      await recordVideo(totalFrames, width, height, fps, orbit, cb)
+      await recordVideo(totalFrames, width, height, fps, settings.quality, orbit, cb)
     }
   } finally {
     canvas.style.transform = ''
@@ -94,6 +108,7 @@ async function recordVideo(
   width: number,
   height: number,
   fps: number,
+  quality: RecordQuality,
   orbit: Omit<OrbitParams, 'loopSeconds'>,
   cb: RecordCallbacks,
 ) {
@@ -101,13 +116,13 @@ async function recordVideo(
   if (!gl || !camera || !advance) return
 
   const codec = await getFirstEncodableVideoCodec(['avc', 'vp9', 'av1'], { width, height })
-  if (!codec) throw new Error('No supported video encoder in this browser')
+  if (!codec) throw new Error('No supported video encoder in this browser (try a smaller resolution)')
   const isMp4 = codec === 'avc'
   const output = new Output({
     format: isMp4 ? new Mp4OutputFormat() : new WebMOutputFormat(),
     target: new BufferTarget(),
   })
-  const source = new CanvasSource(gl.domElement, { codec, bitrate: QUALITY_HIGH })
+  const source = new CanvasSource(gl.domElement, { codec, bitrate: QUALITY_MAP[quality] })
   output.addVideoTrack(source, { frameRate: fps })
   await output.start()
 

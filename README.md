@@ -41,6 +41,9 @@ npm run dev
    encodes it with [mediabunny](https://github.com/vanilagy/mediabunny) —
    frame-perfect MP4 (H.264, WebM fallback) or a zip of PNG frames.
    Frame `i` uses phase `i / totalFrames`, so the video loops seamlessly.
+   Options: base resolution up to 4K, a 1×/1.5×/2× pixel-scale multiplier,
+   30/60 fps, durations 2–20 s or a custom length, and encoder quality
+   (draft / good / high / max).
 
 Same seed + same formula ⇒ identical object, every time.
 

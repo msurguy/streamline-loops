@@ -56,11 +56,23 @@ body,
   left: 16px;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
   padding: 10px 12px;
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(8px);
+  max-width: calc(100vw - 32px);
+}
+
+.duration-input {
+  width: 64px;
+  background: #2a2a2c;
+  color: #ddd;
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 12px;
 }
 
 .record-panel select {
@@ -136,8 +148,10 @@ body,
     gap: 6px;
   }
 
-  .record-panel select {
+  .record-panel select,
+  .record-panel .duration-input {
     flex: 1 1 calc(50% - 6px);
+    width: auto;
     min-height: 42px;
     font-size: 14px;
   }
