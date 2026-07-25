@@ -27,7 +27,11 @@ npm run dev
 4. All polylines are merged into **one geometry / one draw call** — either
    shaded tubes (parallel-transport frames, casts soft shadows) or
    [meshline](https://github.com/pmndrs/meshline) ribbons (flat plotter look).
-5. The camera orbits once per `loopSeconds`. **Record loop** re-renders one
+5. Camera modes: **orbit** (constant elevation), **eased top-down** (starts
+   looking straight down, sweeps down to `minElevation` and back over one
+   loop while circling — `easePower` shapes the dwell, camera distance
+   auto-tracks object size + `distanceOffset`), or **free (mouse)**
+   OrbitControls. One loop per `loopSeconds`. **Record loop** re-renders one
    full orbit frame-by-frame (`frameloop: 'never'` + manual `advance`) and
    encodes it with [mediabunny](https://github.com/vanilagy/mediabunny) —
    frame-perfect MP4 (H.264, WebM fallback) or a zip of PNG frames.

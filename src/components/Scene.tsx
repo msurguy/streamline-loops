@@ -20,13 +20,11 @@ export function Scene({
   bounds,
   render,
   orbit,
-  freeLook,
 }: {
   polylines: Polyline[]
   bounds: Bounds
   render: RenderParams
   orbit: OrbitParams
-  freeLook: boolean
 }) {
   const groundY = bounds.minY - 0.15
   const shadowExtent = Math.max(3, bounds.radius * 1.6)
@@ -62,7 +60,7 @@ export function Scene({
       <directionalLight position={[-4, 3, -3]} intensity={0.4} />
 
       <StoreBridge />
-      <CameraRig params={orbit} freeLook={freeLook} />
+      <CameraRig params={orbit} />
 
       {polylines.length > 0 &&
         (render.renderer === 'tubes' ? (

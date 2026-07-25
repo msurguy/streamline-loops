@@ -9,6 +9,7 @@ import { clipPolylines, type ClipShape } from './lib/clip'
 import { DEFAULT_PRESET, PRESETS, PRESET_NAMES } from './lib/presets'
 import { Scene } from './components/Scene'
 import { RecordButton } from './components/RecordButton'
+import type { CameraMode } from './components/CameraRig'
 
 const DP = PRESETS[DEFAULT_PRESET]
 
@@ -68,11 +69,19 @@ export default function App() {
     offsetY: { value: 0, min: -1.5, max: 1.5, step: 0.05 },
   })
 
+  const isOrbit = (get: (path: string) => unknown) => get('Camera.mode') === 'orbit'
+  const isEased = (get: (path: string) => unknown) => get('Camera.mode') === 'eased top-down'
   const cameraCtl = useControls('Camera', {
+    mode: {
+      value: 'orbit' as CameraMode,
+      options: ['orbit', 'eased top-down', 'free (mouse)'] as CameraMode[],
+    },
     loopSeconds: { value: 8, min: 2, max: 30, step: 0.5 },
-    orbitRadius: { value: 6, min: 2, max: 15, step: 0.1 },
-    elevationDeg: { value: 30, min: -10, max: 85, step: 1 },
-    freeLook: { value: false },
+    orbitRadius: { value: 6, min: 2, max: 15, step: 0.1, render: isOrbit },
+    elevationDeg: { value: 30, min: -10, max: 85, step: 1, render: isOrbit },
+    distanceOffset: { value: 4, min: 0.5, max: 12, step: 0.1, render: isEased },
+    minElevation: { value: 5, min: -10, max: 80, step: 1, render: isEased },
+    easePower: { value: 1.5, min: 0.3, max: 4, step: 0.05, render: isEased },
   })
 
   // Applying a preset writes many controls; this flag stops the
@@ -183,8 +192,13 @@ export default function App() {
   const bounds = useMemo(() => computeBounds(clippedPolylines), [clippedPolylines])
 
   const orbit = {
+    mode: cameraCtl.mode,
     orbitRadius: cameraCtl.orbitRadius,
     elevationDeg: cameraCtl.elevationDeg,
+    // eased orbit auto-frames: camera distance tracks the object's size
+    distance: bounds.radius + cameraCtl.distanceOffset,
+    minElevationDeg: cameraCtl.minElevation,
+    easePower: cameraCtl.easePower,
     target: bounds.center,
   }
 
@@ -196,11 +210,10 @@ export default function App() {
           bounds={bounds}
           render={render}
           orbit={{ ...orbit, loopSeconds: cameraCtl.loopSeconds }}
-          freeLook={cameraCtl.freeLook}
         />
       </div>
 
-      <Leva titleBar={{ title: 'Streamlines' }} />
+      <Leva titleBar={{ title: 'Streamlines' }} collapsed={window.innerWidth < 640} />
 
       {formulaError && <div className="error-banner">⚠ {formulaError}</div>}
       {generating && <div className="generating-pill">Generating…</div>}

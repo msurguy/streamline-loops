@@ -126,3 +126,41 @@ body,
   font-size: 12px;
   max-width: 280px;
 }
+
+@media (max-width: 640px) {
+  .record-panel {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .record-panel select {
+    flex: 1 1 calc(50% - 6px);
+    min-height: 42px;
+    font-size: 14px;
+  }
+
+  .record-btn,
+  .cancel-btn {
+    flex: 1 1 100%;
+    min-height: 46px;
+    font-size: 16px;
+  }
+
+  .progress-track {
+    flex: 1 1 100%;
+    height: 10px;
+  }
+
+  .progress-label {
+    text-align: center;
+    flex: 1;
+  }
+
+  .record-error {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+}

@@ -42,9 +42,12 @@ function download(blob: Blob, filename: string) {
  */
 export async function recordLoop(
   settings: RecordSettings,
-  orbit: Omit<OrbitParams, 'loopSeconds'>,
+  orbitIn: Omit<OrbitParams, 'loopSeconds'>,
   cb: RecordCallbacks,
 ): Promise<void> {
+  // recording needs a deterministic path — mouse mode falls back to orbit
+  const orbit: typeof orbitIn =
+    orbitIn.mode === 'free (mouse)' ? { ...orbitIn, mode: 'orbit' } : orbitIn
   const { gl, camera, advance, setSize, setDpr, setFrameloop } = bridge
   if (!gl || !camera || !advance || !setSize || !setDpr || !setFrameloop) {
     throw new Error('Scene is not ready')
