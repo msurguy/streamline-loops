@@ -17,7 +17,10 @@ npm run dev
    in the Leva panel (any edit flips the preset to *Custom*). Starters:
    *Curl Vortex Disc* (the reference look), *Curl Dome*, *Vortex Array*,
    *Torus Flow*, *Magnetic Dipole*, *Lorenz Attractor*, *Tornado*,
-   *Galaxy Spiral*, *ABC Flow*, *Wind Ribbons*, *Sink + Swirl*.
+   *Galaxy Spiral*, *ABC Flow*, *Wind Ribbons*, *Sink + Swirl*, plus
+   top-down designs (flat 2D fields — pair with the eased top-down camera
+   and orthographic projection): *Star Mandala*, *Wave Interference*,
+   *Whirlpool*, *Flat Curl*, *Vortex Quilt*, *Tree Rings*.
 2. Seed points are scattered in a region (disc / sphere / box) with a seeded
    RNG, then integrated through the field (RK4 or Euler) into polylines.
 3. Optionally the traced lines are **cut by a bounding shape** (Clip folder:
